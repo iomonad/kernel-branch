@@ -1,5 +1,15 @@
 Kernel Branch Projects:
 -----------------------
 
+Ft Linux:
+ \_> Basic LFS Installation
+
 Little Pinguin:
  \_> Euduptyla challenge basis.
+
+Tooling:
+--------
+
+ports:
+ \-> Ports repo used for severals projects
+     (CRUX Compatible)
