@@ -1,0 +1,3 @@
+[submodule "eudyptula"]
+	path = eudyptula
+	url = https://github.com/iomonad/eudyptula
