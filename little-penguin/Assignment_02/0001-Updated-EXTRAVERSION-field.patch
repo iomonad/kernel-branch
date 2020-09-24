@@ -1,0 +1,25 @@
+From e845df1591f833fe3dd081aacbed15e187d958e0 Mon Sep 17 00:00:00 2001
+From: Clement T <me@trosa.io>
+Date: Thu, 24 Sep 2020 21:57:41 +0200
+Subject: [PATCH] Updated EXTRAVERSION field
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index c91342953d9e..ebbf6a4e18e7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 5
+ PATCHLEVEL = 6
+ SUBLEVEL = 0
+-EXTRAVERSION =
++EXTRAVERSION = -thor_kernel
+ NAME = Kleptomaniac Octopus
+ 
+ # *DOCUMENTATION*
+-- 
+2.28.0
+
