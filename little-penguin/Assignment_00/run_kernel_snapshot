@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# This script should be run inside kernel
+# master trunk repo
+#
+
+if [ ! -f "initramfs.img" ]; then
+    mkinitcpio --generate ./initramfs.img
+fi
+
+qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage \
+		   -nographic -append "console=ttyS0 $@" \
+		   -initrd initramfs.img \
+		   -m 800
