@@ -1,0 +1,6 @@
+#
+# /etc/ports/iomonad.httpup: Iomonad's port collection
+#
+
+ROOT_DIR=/usr/ports/iomonad
+URL=https://raw.githubusercontent.com/iomonad/kernel-branch/master/ports
