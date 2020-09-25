@@ -2,7 +2,7 @@ From e845df1591f833fe3dd081aacbed15e187d958e0 Mon Sep 17 00:00:00 2001
 From: Clement T <me@trosa.io>
 Date: Thu, 24 Sep 2020 21:57:41 +0200
 Subject: [PATCH] Updated EXTRAVERSION field
-
+Signed-off-by: Clement T <me@trosa.io>
 ---
  Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

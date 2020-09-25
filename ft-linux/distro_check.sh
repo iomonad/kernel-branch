@@ -59,7 +59,7 @@ function ensure_udev_installed () {
 }
 
 function check_kernel_version_string () {
-    local username=ctrouill
+    local username=marvin
     printf '%s' "$FUNCNAME: "
     if [ "$(uname -r | cut -d '-' -f 2)" != "$username" ]; then
 	failure "Wrong username"
