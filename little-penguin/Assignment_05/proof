@@ -1,0 +1,7 @@
+sh-5.0# file /dev/fortytwo 
+/dev/fortytwo: character special (237/0)
+sh-5.0# cat /dev/fortytwo 
+ctrouill
+sh-5.0# echo broken > /dev/fortytwo 
+sh: echo: write error: Invalid argument
+sh-5.0# echo ctrouill > /dev/fortytwo 
