@@ -1,0 +1,25 @@
+sh-5.0# ls -l /sys/kernel/debug/fortytwo/
+total 0
+---x-wxr-T 1 root root 0 Sep 27 00:30 foo
+--w--wx-wT 1 root root 0 Sep 27 00:30 id
+-rw-rwxr-- 1 root root 0 Sep 27 00:30 jiffies
+sh-5.0# cat /sys/kernel/debug/fortytwo/id
+ctrouill
+sh-5.0# cat /sys/kernel/debug/fortytwo/jiffies 
+4295302976
+sh-5.0# cat /sys/kernel/debug/fortytwo/jiffies 
+4295303387
+sh-5.0# cat /sys/kernel/debug/fortytwo/jiffies 
+4295303556
+sh-5.0# cat /sys/kernel/debug/fortytwo/jiffies 
+4295303701
+sh-5.0# cat /sys/kernel/debug/fortytwo/jiffies 
+4295303928
+sh-5.0# cat /sys/kernel/debug/fortytwo/foo
+sh-5.0# echo "wtg ??" > /sys/kernel/debug/fortytwo/foo
+sh-5.0# cat /sys/kernel/debug/fortytwo/foo
+wtg ??
+sh-5.0# echo "et merce" > /sys/kernel/debug/fortytwo/foo
+sh-5.0# cat /sys/kernel/debug/fortytwo/foo
+et merce
+sh-5.0#
