@@ -1,5 +1,4 @@
 #include <linux/fs.h>
-#include <linux/mutex.h>
 #include <linux/timer.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
