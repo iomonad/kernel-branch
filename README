@@ -1,7 +1,7 @@
 Kernel Branch Projects:
 -----------------------
 
-Ft Linux:
+[FT Linux]:
  - Build a Linux Kernel
  - Install some binaries
  - Implement a filesystem hierarchy compliant with the standards
@@ -26,6 +26,6 @@ Ft Linux:
 Tooling:
 --------
 
-ports:
+[ports]:
  - List of packages for crux compatibles ports
    written for project completions
