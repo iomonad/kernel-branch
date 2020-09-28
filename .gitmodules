@@ -1,3 +1,6 @@
 [submodule "eudyptula"]
 	path = eudyptula
 	url = https://github.com/iomonad/eudyptula
+[submodule "KFS"]
+	path = KFS
+	url = https://github.com/iomonad/KFS
