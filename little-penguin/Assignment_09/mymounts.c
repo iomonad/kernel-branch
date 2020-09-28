@@ -38,20 +38,19 @@ MODULE_AUTHOR("ctrouill");
 #define PROCFS_NAME "mymounts"
 
 static struct proc_dir_entry *entry;
+static char *shared_buffer;
 
 static int mount_lambda(struct vfsmount *root, void *data) {
 	struct super_block *sb;
 	struct seq_file *seqptr;
 	struct path fpath;
 	char *dentry_path;
-	char *buffer;
-
-        if (!(buffer = kmalloc(sizeof(char) * PAGE_SIZE, GFP_KERNEL))) {
-		printk(KERN_ERR "Error while allocating memory!");
-		return 1;
-	}
 
 	seqptr = (struct seq_file*)data;
+	if (!seqptr) {
+		printk(KERN_ERR "SEQUENCE IS NULL");
+		return 0;
+	}
 	/* Assign superblock */
 	sb = root->mnt_sb;
 
@@ -60,9 +59,8 @@ static int mount_lambda(struct vfsmount *root, void *data) {
 	fpath.dentry = root->mnt_root;
 
 	/* Return the path of a dentry */
-	dentry_path = d_path(&fpath, buffer, PAGE_SIZE);
+	dentry_path = d_path(&fpath, shared_buffer, PAGE_SIZE);
 	seq_printf(seqptr, "%-15s %s\n", sb->s_id, dentry_path);
-	kfree(buffer);
 	return 0;
 }
 
@@ -85,7 +83,7 @@ static int seq_implementation(struct seq_file *s, void *v)
 	 */
 	kern_path("/", 0, &path);
 	root = collect_mountpoints(&path);
-        iterate_mountpoints(mount_lambda, v, root);
+        iterate_mountpoints(mount_lambda, (void*)s, root);
 	return 0;
 }
 
@@ -112,6 +110,11 @@ static struct file_operations pops = { .open = p_open,
 
 static __init int initialize(void)
 {
+	shared_buffer = kmalloc(sizeof(char) * PAGE_SIZE, GFP_KERNEL);
+	if (!shared_buffer) {
+		printk(KERN_ERR "Error while allocating memory!");
+		return 1;
+	}
 	entry = proc_create(PROCFS_NAME, 0660, NULL, &pops);
 	if (entry == NULL) {
 		printk(KERN_ERR "Error while creating procfs file !");
@@ -123,6 +126,7 @@ static __init int initialize(void)
 
 static __exit void destroy(void)
 {
+	kfree(shared_buffer);
 	proc_remove(entry);
 	printk(KERN_INFO "Goodbye, sad world.");
 }

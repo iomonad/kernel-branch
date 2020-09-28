@@ -1,0 +1,36 @@
+# uname -a
+Linux ctrouill 4.19.48-ctrouill #1 SMP Thu Sep 24 10:15:04 UTC 2020 x86_64 Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz GenuineIntel GNU/Linux
+# make   
+make -C /lib/modules/4.19.48-ctrouill/build M=/root/Assignment_09 modules
+make[1]: Entering directory '/usr/src/linux-4.19.48'
+  CC [M]  /root/Assignment_09/mymounts.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/Assignment_09/mymounts.mod.o
+  LD [M]  /root/Assignment_09/mymounts.ko
+make[1]: Leaving directory '/usr/src/linux-4.19.48'
+# insmod ./mymounts.ko
+# lsmod | grep mymounts
+mymounts               16384  0
+# dmesg |tail
+[   11.693378] e1000: enp0s3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+[   13.364224] NET: Registered protocol family 10
+[   13.375125] Segment Routing with IPv6
+[  248.153352] mymounts: loading out-of-tree module taints kernel.
+[  248.153748] The 'mymounts' module is in place !
+[  264.815717] Goodbye, sad world.
+[  581.561962] The 'mymounts' module is in place !
+[  604.440768] Goodbye, sad world.
+[  760.926710] The 'mymounts' module is in place !
+[  806.747973] Goodbye, sad world.
+# cat /proc/mymounts 
+sda3            /
+devtmpfs        /dev
+devpts          /dev/pts
+tmpfs           /dev/shm
+proc            /proc
+sysfs           /sys
+tmpfs           /run
+sda1            /boot
+# rmmod mymounts.
+
