@@ -11,14 +11,24 @@
  *    is removed in favor of the regular proc_register;
  *    To have the same behaviour, put zero in the inode
  *    field of the structure.
+ *  - Since >4.9 kernel version, file_operations removed
+ *    in favor of proc_operation ! THIS SHOULD NOT COMPILE
+ *    ON BLEEDING EDGE SYSTEMS.
+ *
+ * Lecture:
+ *  - https://kernelnewbies.org/Documents/SeqFileHowTo
  */
 
 #include <linux/fs.h>
 #include <linux/list.h>
+#include <linux/slab.h>
 #include <linux/mount.h>
+#include <linux/namei.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/proc_fs.h>
+#include <linux/kallsyms.h>
+#include <linux/seq_file.h>
 #include <linux/fs_struct.h>
 
 MODULE_LICENSE("GPL");
@@ -29,37 +39,76 @@ MODULE_AUTHOR("ctrouill");
 
 static struct proc_dir_entry *entry;
 
-static int done;
+static int mount_lambda(struct vfsmount *root, void *data) {
+	struct super_block *sb;
+	struct seq_file *seqptr;
+	struct path fpath;
+	char *dentry_path;
+	char *buffer;
 
-static ssize_t p_read(struct file *file, char __user *ubuff,
-		      size_t count, loff_t *ppos) {
-	struct dentry *curdentry;
-	int len;
-
-	len = 0;
-	if (done)
-		return 0;
-	list_for_each_entry(curdentry, &current->fs->root.mnt->mnt_root->d_subdirs, d_child) {
-		if (curdentry->d_flags & DCACHE_MOUNTED) {
-			char format[300]; /* Find smarter way to alloc */
-
-			sprintf(format, "%-10s /sys\n", curdentry->d_name.name);
-			if (copy_to_user(ubuff, format, 300))
-				return -EINVAL;
-			len += strlen(format);
-		}
+        if (!(buffer = kmalloc(sizeof(char) * PAGE_SIZE, GFP_KERNEL))) {
+		printk(KERN_ERR "Error while allocating memory!");
+		return 1;
 	}
-	done = 1;
-	return len;
-}
 
-static int p_release(struct inode *ip, struct file *fp) {
-	done = 0x0;
+	seqptr = (struct seq_file*)data;
+	/* Assign superblock */
+	sb = root->mnt_sb;
+
+	/* Build path */
+	fpath.mnt = root;
+	fpath.dentry = root->mnt_root;
+
+	/* Return the path of a dentry */
+	dentry_path = d_path(&fpath, buffer, PAGE_SIZE);
+	seq_printf(seqptr, "%-15s %s\n", sb->s_id, dentry_path);
+	kfree(buffer);
 	return 0;
 }
 
-static struct proc_ops pops = { .proc_read = p_read,
-	.proc_release = p_release };
+static int seq_implementation(struct seq_file *s, void *v)
+{
+	struct path path;
+	struct vfsmount *root;
+	struct vfsmount *(*collect_mountpoints)(const struct path*) =
+		(void *)kallsyms_lookup_name("collect_mounts");
+	int (*iterate_mountpoints)(int(*)(struct vfsmount*, void*), void*,
+	        struct vfsmount*) = (void *)kallsyms_lookup_name("iterate_mounts");
+	/*
+	 * Since we don't use Module.symvers, we should manually
+	 * assign symbols for indy use, otherwise, kernel will drop
+	 * us in dmesg:
+	 *
+	 * [  909.960914] mymounts: Unknown symbol collect_mounts (err -2)
+	 * [  909.960947] mymounts: Unknown symbol iterate_mounts (err -2)
+	 *
+	 */
+	kern_path("/", 0, &path);
+	root = collect_mountpoints(&path);
+        iterate_mountpoints(mount_lambda, v, root);
+	return 0;
+}
+
+static int p_open(struct inode *i, struct file *f)
+{
+	/*
+	 * Build our char sequence that will automaticaly
+	 * generate the boilerplate for for the `seq_read`
+	 * function.
+	 *
+	 * It provides a safer interface to the /proc filesystem
+	 * than previous procfs methods because it protects against overflow
+	 * of the output buffer and easily handles procfs files that are larger
+	 * than one page. It also provides methods for traversing a list of
+	 * kernel items and iterating on that list. It provides procfs output
+	 * facilities that are less error-prone than the
+	 * previous procfs interfaces.
+	 */
+	return single_open(f, &seq_implementation, NULL);
+}
+
+static struct file_operations pops = { .open = p_open,
+	                               .read = seq_read };
 
 static __init int initialize(void)
 {
