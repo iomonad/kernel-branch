@@ -2,14 +2,30 @@ Kernel Branch Projects:
 -----------------------
 
 Ft Linux:
- \_> Basic LFS Installation
+ - Build a Linux Kernel
+ - Install some binaries
+ - Implement a filesystem hierarchy compliant with the standards
+ - Connect to the Internet
 
-Little Pinguin:
- \_> Euduptyla challenge basis.
+[Little Pinguin]:
+ - Compile a custom Kernel
+ - Build and use a kernel module
+ - Learn how drivers in Linux work
+
+[Process And Memory]:
+ - Find and understand the syscalls table
+ - Find and understand the syscalls header file.
+ - Add a custom syscall in the Linux Kernel. In our case,
+   a syscall that takes a PID as its argument, fill a
+   structure with informations regarding that PID and
+   send it back to the caller.
+ - Integrate your code in the Linux code base.
+ - Handle correctly the differences between the
+   kernel and userland.
 
 Tooling:
 --------
 
 ports:
- \-> Ports repo used for severals projects
-     (CRUX Compatible)
+ - List of packages for crux compatibles ports
+   written for project completions
